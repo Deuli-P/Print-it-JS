@@ -29,85 +29,74 @@ const slides = [
 ]
 
 const slideTotal = slides.length;
+let dots = document.getElementsByClassName('dot');
 //----------------------------- FUNCTION -----------------------------
 
 // ----------------INIT-----------
 function init () {
 	
-	slides.reverse();
 
 	slides.forEach( (slide , index) => {	
-		const originalIndex = slides.length - index;
-
+		const originalIndex = index +1;
+		// Creer chaque dot
 		let newDot = document.createElement('div');
+			// ajouter class
 		newDot.classList.add('dot');
+		// ajouter chaque dot a la fin de la div container
 		dotContainer.appendChild(newDot);
-	
+		// Creer chaque image 
 		let img = document.createElement('img');
+			// ajouter class
 		img.classList.add('banner-img');
+			// hide l'image
 		img.style.visibility= 'hidden'
+			// ajouter l'id different pour chaque img 
 		img.id = 'slide' + (originalIndex);
+			// source de l'image depuis le tableau slides
 		img.src = slide.image;
 		img.alt = "Slide";
-		banner.prepend(img);
+			// ajouter chaque image a la fin de la div banner
+		banner.append(img);
 	});
-	slides.reverse();
-	bannerImg[slideIndex].style.visibility = 'visible';
 	createP ();
-	showP ()	
-	dotSelectedAdd ()
+	show ()	
 }
 init();
+// ------------------ Fleche ---------------------------
+arrowRight.addEventListener('click',  () => slideAction(`right`));
+arrowLeft.addEventListener('click',() =>  slideAction(`left`));
 
-// ------------------Fleche ---------------
-function slideActionRight (){
-	bannerImg[slideIndex].style.visibility = 'hidden';
-	dotSelectedSupp ()
-	if(slideIndex === slides.length -1){
-			 slideIndex = 0} 
-	else { slideIndex++ }
-	showP ()
-	bannerImg[slideIndex].style.visibility = 'visible';
-	dotSelectedAdd ()
+
+
+function slideAction(sens) {
+ 	bannerImg[slideIndex].style.visibility = 'hidden';			//  cache l'image selectionné
+ 	dots[slideIndex].classList.remove('dot_selected');		// supprime la qui donne le bg blanc du dot selectionné
+		// Boucle infini 
+	if ( sens = 'right') {
+		if(slideIndex === slides.length -1){
+			slideIndex = 0} 
+		else { slideIndex++ }
 	}
-
-function slideActionLeft (){
-	bannerImg[slideIndex].style.visibility = 'hidden';
-	dotSelectedSupp ()
-	if(slideIndex === 0 ){
-			 slideIndex = slides.length-1} 
-	else { slideIndex--}
-	showP ()
-	bannerImg[slideIndex].style.visibility = 'visible';
-	dotSelectedAdd ()
-	} 
-
-arrowRight.addEventListener('click', slideActionRight);
-
-arrowLeft.addEventListener('click', slideActionLeft);
-
-// --------------------- Create Images ------------------
+	else if (sens = 'left') {
+		if(slideIndex === 0 ){
+				 slideIndex = slides.length-1} 
+	 	else { slideIndex--}
+	}
+	// affichage de l'image / text / dot avec le nouveau slideIndex
+ 	show ()
+};
 
 // -------------------- Create Paragraphe ---------------
 function createP () {
 	let description = document.createElement('p')
 	description.innerHTML = slides[slideIndex].tagLine
 	banner.append(description)
-	console.log(`Paragraphe Créé`)
 }
+// ------------------Afficher element select ------------
 
-function showP () {
+function show () {
 	let bannerText = document.querySelector('#banner p');
 	bannerText.innerHTML = slides[slideIndex].tagLine;
-}
-// -------------------- Changer  --------------
-
-function dotSelectedSupp () {
-	let dots = document.getElementsByClassName('dot');
-	dots[slideIndex].classList.remove('dot_selected');
-};
-
-function dotSelectedAdd() {
-	let dots = document.getElementsByClassName('dot');
+	bannerImg[slideIndex].style.visibility = 'visible';
 	dots[slideIndex].classList.add('dot_selected');
-  };
+}
